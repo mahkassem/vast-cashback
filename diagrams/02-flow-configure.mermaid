@@ -1,0 +1,53 @@
+sequenceDiagram
+    autonumber
+    actor U as Vast Admin or Merchant
+    participant FE as Admin / Merchant UI
+    participant API as CashbackConfigurationController
+    participant SVC as CashbackService
+    participant REPO as CashbackConfigurationRepository
+    participant DB as MySQL
+    participant CACHE as Cache (Redis)
+
+    U->>FE: Open Cashback settings
+    FE->>API: GET /restaurants/{id}/cashback/config
+    API->>SVC: getRestaurantConfig(id)
+    SVC->>CACHE: get cashback_config:{id}
+    alt cache hit
+        CACHE-->>SVC: config
+    else cache miss
+        SVC->>REPO: getActiveByRestaurant(id)
+        REPO->>DB: SELECT * FROM cashback_configurations WHERE restaurant_id=? ORDER BY version DESC LIMIT 1
+        DB-->>REPO: latest version row
+        REPO-->>SVC: config
+        SVC->>CACHE: set cashback_config:{id} TTL=1h
+    end
+    SVC-->>API: config
+    API-->>FE: 200 OK { config }
+    FE-->>U: Show form (read-only fields if userType=restaurant && !merchant_can_edit)
+
+    U->>FE: Submit changes (percentage, cap, expiration_days, ...)
+    FE->>API: PUT /restaurants/{id}/cashback/config
+    API->>SVC: setConfiguration(id, payload, updatedBy, userType)
+
+    alt userType=restaurant
+        SVC->>SVC: validate prohibited fields (is_active, is_mandatory_to_checkout, merchant_can_edit, vast_fee_percentage) absent
+        SVC->>REPO: getLatestByRestaurant(id)
+        REPO-->>SVC: latest
+        SVC->>SVC: assert latest.merchant_can_edit == true
+    end
+
+    SVC->>SVC: validate ranges (1 <= percentage <= 100, cap_amount >= 0, expiration_days > 0, min_invoice_amount >= 0)
+    SVC->>REPO: createNewVersion(payload, restaurantId, updatedBy)
+    REPO->>DB: BEGIN
+    REPO->>DB: SELECT MAX(version) FROM cashback_configurations WHERE restaurant_id=?
+    DB-->>REPO: latest version v
+    REPO->>DB: INSERT cashback_configurations (...payload..., version = v+1, updated_by, ...)
+    DB-->>REPO: row inserted (id, version=v+1)
+    REPO->>DB: COMMIT
+    REPO-->>SVC: new config
+    SVC->>CACHE: forget cashback_config:{id}
+    SVC-->>API: new config
+    API-->>FE: 200 OK { config }
+    FE-->>U: Saved (history shows previous versions)
+
+    Note over DB: Earlier versions remain immutable.<br/>Latest version is current.<br/>Lots reference configuration_version,<br/>so changes never alter earned terms.

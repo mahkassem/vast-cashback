@@ -1,0 +1,115 @@
+erDiagram
+    restaurants ||--o{ cashback_configurations : "has versioned"
+    restaurants ||--o{ cashback_enrollments : "owns"
+    users ||--o{ cashback_enrollments : "linked (nullable)"
+    cashback_enrollments ||--o{ cashback_lots : "earns into"
+    cashback_enrollments ||--o{ cashback_redemptions : "spends from"
+    cashback_enrollments ||--|| cashback_balances : "cached as"
+    cashback_enrollments ||--o{ cashback_ledger : "events for"
+    payments ||--o{ cashback_lots : "earned via"
+    payments ||--o{ cashback_redemptions : "applied to"
+    cashback_lots ||--o{ cashback_redemption_consumptions : "drained by"
+    cashback_redemptions ||--o{ cashback_redemption_consumptions : "consumes"
+
+    restaurants {
+        char(36) id PK
+        string name_en
+        bool is_tips
+    }
+    users {
+        char(36) id PK
+        string phone UK
+        timestamp phone_verified_at
+        enum role
+    }
+    payments {
+        char(36) id PK
+        char(36) order_id FK
+        char(36) restaurant_id FK
+        char(36) user_id "nullable"
+        bool is_refund
+        decimal total_after_commission
+    }
+    cashback_configurations {
+        bigint id PK
+        char(36) restaurant_id FK
+        decimal percentage
+        decimal cap_amount "0=unlimited"
+        int expiration_days
+        decimal min_invoice_amount
+        bool is_active
+        bool is_mandatory_to_checkout
+        bool merchant_can_edit
+        decimal vast_fee_percentage
+        int version "max=current"
+        char(36) updated_by FK
+    }
+    cashback_enrollments {
+        char(36) id PK
+        char(36) restaurant_id FK
+        char(36) user_id FK "nullable"
+        string phone
+        string full_name
+        enum status
+        timestamp opted_in_at
+        timestamp opted_out_at
+    }
+    cashback_lots {
+        char(36) id PK
+        char(36) enrollment_id FK
+        char(36) restaurant_id FK
+        char(36) payment_id FK
+        int configuration_version
+        decimal eligible_amount
+        decimal earn_amount
+        decimal vast_fee_amount
+        decimal consumed_amount
+        decimal expired_amount
+        enum status
+        timestamp earned_at
+        timestamp available_at
+        timestamp expires_at
+    }
+    cashback_redemptions {
+        char(36) id PK
+        char(36) enrollment_id FK
+        char(36) restaurant_id FK
+        char(36) payment_id FK
+        decimal amount
+        enum status
+        timestamp redeemed_at
+        timestamp voided_at
+        string void_reason
+    }
+    cashback_redemption_consumptions {
+        bigint id PK
+        char(36) redemption_id FK
+        char(36) lot_id FK
+        decimal amount_consumed
+    }
+    cashback_balances {
+        char(36) id PK
+        char(36) enrollment_id FK,UK
+        char(36) restaurant_id FK
+        decimal available_amount
+        decimal pending_amount
+        decimal lifetime_earned
+        decimal lifetime_redeemed
+        decimal lifetime_expired
+        timestamp last_recalculated_at
+    }
+    cashback_ledger {
+        bigint id PK
+        char(36) enrollment_id FK
+        char(36) restaurant_id FK
+        enum event_type "earn|redeem|mature|expire|void_redemption|reverse_vast_fee|manual_adjust"
+        decimal amount "signed"
+        decimal available_balance_before
+        decimal available_balance_after
+        char(36) lot_id "nullable"
+        char(36) redemption_id "nullable"
+        char(36) payment_id "nullable"
+        text description
+        char(36) created_by_user_id "nullable"
+        timestamp created_at
+    }

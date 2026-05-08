@@ -1,0 +1,66 @@
+sequenceDiagram
+    autonumber
+    actor C as Customer
+    participant APP as Customer App
+    participant API as Cashback Redeem Service
+    participant DB as MySQL
+    participant LEDGER as Cashback Ledger
+    participant PAY as Payment Flow
+    participant GW as Payment Gateway
+
+    C->>APP: At checkout sign in with phone
+    APP->>API: GET cashback balance
+    API->>DB: SELECT enrollment and balances
+    DB-->>API: Available and pending amounts
+    API-->>APP: Balance
+    APP-->>C: Show balance and offer to apply
+    C->>APP: Apply amount Y up to available
+
+    APP->>API: POST cashback apply on payment
+
+    API->>DB: BEGIN
+    Note over API: Atomic redemption with FIFO partial drain across lots
+
+    API->>DB: SELECT FOR UPDATE active matured lots ordered by available at then earned at then id
+    DB-->>API: Locked active lots
+
+    API->>API: Assert sum of remaining is at least Y or rollback as insufficient balance
+
+    API->>DB: INSERT cashback redemption row with status pending and amount Y
+    DB-->>API: Redemption id
+
+    loop For each lot until Y is drained
+        API->>API: Take is the lesser of lot remaining and Y left
+        API->>DB: INSERT redemption consumption row with amount taken
+        API->>DB: UPDATE lot consumed amount and flip status to fully consumed if drained
+        API->>API: Subtract taken from Y left
+    end
+
+    API->>DB: UPDATE balances - subtract Y from available and add Y to lifetime redeemed
+    API->>LEDGER: INSERT redeem event with balances and ids
+    API->>DB: COMMIT
+
+    API->>PAY: Apply discount to payment
+    PAY->>PAY: Payable total is order total minus Y
+    API-->>APP: Return redemption id and payable total
+    APP-->>C: Show new total
+
+    APP->>GW: Charge payable total
+
+    alt Gateway success
+        GW-->>APP: Paid
+        APP->>API: POST cashback redemption confirm
+        API->>DB: UPDATE redemption status to completed
+        Note over API: Lots already debited at apply time so nothing more to do here
+    else Gateway decline or abandoned
+        GW-->>APP: Failed
+        APP->>API: POST cashback redemption void
+        API->>DB: BEGIN
+        API->>DB: UPDATE redemption status to voided with reason
+        loop For each consumption row of this redemption
+            API->>DB: UPDATE lot - subtract amount and restore status to active if needed
+        end
+        API->>DB: UPDATE balances - add Y back to available and subtract Y from lifetime redeemed
+        API->>LEDGER: INSERT void redemption event
+        API->>DB: COMMIT
+    end

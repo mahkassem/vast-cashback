@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vast Cashback Module — Design Bundle</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #181b22;
+    --panel-soft: #1f232c;
+    --border: #2a2f3a;
+    --text: #e8eaef;
+    --muted: #8a93a3;
+    --accent: #4ea1ff;
+    --accent-soft: #1a3a5c;
+    --green: #3ec78b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+  }
+  header {
+    padding: 48px 32px 40px;
+    background: linear-gradient(180deg, #161922 0%, #0f1115 100%);
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+  header h1 { font-size: 28px; letter-spacing: -0.02em; margin-bottom: 8px; }
+  header p { color: var(--muted); font-size: 14px; max-width: 600px; margin: 0 auto; }
+  .badge {
+    display: inline-block; margin-top: 12px;
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 12px; padding: 4px 12px; border-radius: 999px;
+    font-weight: 600;
+  }
+  main { max-width: 800px; margin: 0 auto; padding: 40px 24px 80px; }
+  .cards { display: grid; gap: 16px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; text-decoration: none; color: var(--text);
+    transition: border-color 0.15s, transform 0.15s;
+    display: block;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card h2 { font-size: 17px; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+  .card h2 .num {
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 11px; padding: 2px 8px; border-radius: 999px; flex-shrink: 0;
+  }
+  .card p { color: var(--muted); font-size: 13px; margin: 0; }
+  .decisions {
+    margin-top: 40px; background: var(--panel-soft); border-radius: 12px;
+    padding: 24px; border-left: 3px solid var(--accent);
+  }
+  .decisions h3 { font-size: 15px; margin-bottom: 12px; }
+  .decisions table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .decisions th { text-align: left; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  .decisions td { padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  .decisions td:first-child { color: var(--muted); width: 30px; }
+  .footer {
+    margin-top: 48px; text-align: center; color: var(--muted); font-size: 12px;
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Vast Cashback Module</h1>
+  <p>Full design package for the VastPay cashback program. Database schema, integration impact analysis, and visual diagrams.</p>
+  <span class="badge">v0.4 — Post Integration Audit</span>
+</header>
+
+<main>
+  <div class="cards">
+    <a class="card" href="diagrams/index.html">
+      <h2><span class="num">Diagrams</span> Interactive Diagram Viewer</h2>
+      <p>ERD + 5 sequence diagrams rendered with Mermaid. Copy source for ClickUp Docs or export PNG/SVG via mermaid.live.</p>
+    </a>
+    <a class="card" href="cashback-db-design.md">
+      <h2><span class="num">Schema</span> Database Design</h2>
+      <p>Seven tables, column specs, calculation algorithm, FIFO redemption logic, fees-only refund flow, and migration corrections.</p>
+    </a>
+    <a class="card" href="cashback-integration-impact.md">
+      <h2><span class="num">Impact</span> Integration Impact Analysis</h2>
+      <p>Every affected surface in VastPay categorized as seamless, minor, or major change. Resolved product decisions at the top.</p>
+    </a>
+  </div>
+
+  <div class="decisions">
+    <h3>Locked Decisions (v0.4)</h3>
+    <table>
+      <tr><th>#</th><th>Topic</th><th>Decision</th></tr>
+      <tr><td>1</td><td>Enrollment scope</td><td>Per-restaurant. <code>(restaurant_id, phone)</code> unique.</td></tr>
+      <tr><td>2</td><td>Balance scope</td><td>Per-restaurant. No inter-restaurant settlement.</td></tr>
+      <tr><td>3</td><td>Cap semantics</td><td>Per-transaction earn cap.</td></tr>
+      <tr><td>4</td><td>Vast fee model</td><td>On eligible_amount, charged to merchant on top.</td></tr>
+      <tr><td>5</td><td>Refund handling</td><td>Fees-only reversal. Used cashback is non-refundable.</td></tr>
+      <tr><td>6</td><td>Holding period</td><td><code>available_at</code> on each lot. Config from env.</td></tr>
+      <tr><td>7</td><td>Commission base</td><td><code>order.total</code> (full sale, including cashback portion).</td></tr>
+      <tr><td>8</td><td>Webhook version</td><td>Stay on v1. Additive cashback fields.</td></tr>
+      <tr><td>9</td><td>Currency</td><td>Single-currency assumption. No currency columns.</td></tr>
+      <tr><td>10</td><td>Source-link</td><td>Plain <code>payment_id</code> FK.</td></tr>
+    </table>
+  </div>
+
+  <div class="footer">
+    <p>VastPay v1 scope. VastMenu deferred.</p>
+  </div>
+</main>
+
+</body>
+</html>

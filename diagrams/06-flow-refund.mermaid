@@ -1,0 +1,38 @@
+sequenceDiagram
+    autonumber
+    actor M as Merchant or Admin
+    participant API as Refund Service
+    participant DB as MySQL
+    participant LEDGER as Cashback Ledger
+    participant GW as Payment Gateway
+    participant SETTLE as Settlement Job
+
+    M->>API: Initiate refund for order O
+    API->>DB: SELECT order with payment and cashback context
+    DB-->>API: Order, payment, lots earned from this payment, redemptions applied to this payment
+
+    API->>API: Compute payable_total as order total minus cashback redeemed on this order
+    API->>API: Only the gateway portion is refundable
+
+    API->>GW: Refund payable_total
+    GW-->>API: Refund accepted
+
+    API->>DB: BEGIN
+    API->>DB: UPDATE payment - set is_refund to true and store refund metadata
+
+    Note over API: Reverse only the Vast fees on lots earned from this payment.<br/>Lots and redemptions are not modified.
+
+    loop For each cashback lot tied to the refunded payment
+        API->>LEDGER: INSERT reverse_vast_fee event with vast_fee_amount, lot_id, payment_id
+    end
+
+    API->>DB: COMMIT
+
+    Note over API: Used cashback stays consumed and is non-refundable.<br/>Earned cashback stays in the customer wallet.<br/>Customer balance is unchanged by the refund.
+
+    API-->>M: Refund successful with summary of fees reversed
+
+    Note over SETTLE: Next settlement cycle picks up reverse_vast_fee events<br/>and posts merchant credits to financial_transactions.
+
+    SETTLE->>LEDGER: Read reverse_vast_fee events since last payout
+    SETTLE->>DB: INSERT credits to financial_transactions for affected merchants

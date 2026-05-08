@@ -1,0 +1,58 @@
+sequenceDiagram
+    autonumber
+    actor C as Customer
+    participant APP as Customer App / Web
+    participant API as CashbackEnrollmentController
+    participant SVC as EnrollmentService
+    participant OTP as OTP Service
+    participant USERS as users table
+    participant DB as MySQL
+
+    C->>APP: Scan restaurant QR
+    APP->>API: GET /restaurants/{id}/cashback/preview
+    API-->>APP: { is_active, percentage, cap_amount, min_invoice_amount, sample_earn_for(amount) }
+    APP-->>C: "Earn up to X SAR cashback on next purchase"
+
+    C->>APP: Tap "Join cashback program"
+    APP-->>C: Form (phone E.164, full_name)
+    C->>APP: Enter phone + full_name, submit
+    APP->>API: POST /restaurants/{id}/cashback/enroll/start { phone, full_name }
+
+    API->>SVC: startEnrollment(restaurantId, phone, fullName)
+    SVC->>DB: SELECT id FROM cashback_enrollments WHERE restaurant_id=? AND phone=?
+    alt already enrolled & status=active
+        DB-->>SVC: existing enrollment
+        SVC-->>API: 200 { already_enrolled: true }
+        API-->>APP: { already_enrolled: true }
+        APP-->>C: "You're already enrolled"
+    else not enrolled
+        SVC->>OTP: send_otp(phone)
+        OTP-->>SVC: otp_token
+        SVC-->>API: { otp_token }
+        API-->>APP: { otp_token }
+        APP-->>C: Enter code
+
+        C->>APP: 6-digit code
+        APP->>API: POST /cashback/enroll/verify { otp_token, code, restaurantId, phone, full_name }
+        API->>OTP: verify(otp_token, code)
+        OTP-->>API: ok
+
+        API->>SVC: completeEnrollment(restaurantId, phone, fullName)
+        SVC->>USERS: SELECT id FROM users WHERE phone=? AND deleted_at IS NULL
+        alt users row exists
+            USERS-->>SVC: user_id
+            Note over SVC: Link enrollment to existing VastPay user
+        else no user row
+            USERS-->>SVC: null
+            Note over SVC: Optional: create users row with role=user, type=user, phone_verified_at=now()
+        end
+
+        SVC->>DB: BEGIN
+        SVC->>DB: INSERT cashback_enrollments (restaurant_id, user_id, phone, full_name, status='active', opted_in_at=now())
+        SVC->>DB: INSERT cashback_balances (enrollment_id, restaurant_id, available_amount=0, pending_amount=0, ...)
+        SVC->>DB: COMMIT
+
+        SVC-->>API: enrollment
+        API-->>APP: 201 { enrollment }
+        APP-->>C: "You're in. Pay to start earning."
+    end

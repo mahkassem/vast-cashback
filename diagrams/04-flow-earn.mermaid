@@ -1,0 +1,73 @@
+sequenceDiagram
+    autonumber
+    actor C as Customer
+    participant APP as Customer App
+    participant PAY as Payment Flow
+    participant GW as Payment Gateway
+    participant WH as Gateway Webhook
+    participant API as Payment Controller
+    participant CB as Cashback Earn Service
+    participant CFG as Cashback Service
+    participant DB as MySQL
+    participant LEDGER as Cashback Ledger
+
+    C->>APP: Confirm payment
+    APP->>PAY: POST payments
+    PAY->>GW: Create payment intent
+    GW-->>PAY: paymentURL
+    PAY-->>APP: paymentURL
+    APP->>GW: Redirect through 3DS or wallet
+    GW-->>WH: Webhook payment status Successful
+    WH->>API: Handle paid webhook
+    API->>API: Update payment status and paid at
+    API->>API: Update order status to paid
+
+    API->>CB: On payment paid
+    CB->>CFG: Get restaurant config
+    CFG-->>CB: Config or null
+
+    alt No config or program inactive
+        CB-->>API: Skip - no cashback program
+    else Program active
+        CB->>CB: Compute eligible amount from order total
+        Note right of CB: VastPay today uses order total
+        Note right of CB: VastMenu later subtracts tips
+
+        alt Below minimum invoice amount
+            CB-->>API: Skip - below threshold
+        else Amount is eligible
+            CB->>DB: Find enrollment by phone or user
+            alt No enrollment
+                Note over CB: If mandatory at checkout the customer was already blocked
+                Note over CB: Otherwise silently skip
+                CB-->>API: Skip - not enrolled
+            else Has enrollment
+                DB-->>CB: Enrollment row
+
+                CB->>CB: Compute raw cashback
+                CB->>CB: Apply per transaction cap
+                CB->>CB: Compute vast fee on eligible amount
+                CB->>CB: Compute available at and expires at
+
+                CB->>DB: BEGIN
+                CB->>DB: INSERT cashback lot
+                DB-->>CB: Lot id
+
+                alt Available immediately
+                    CB->>DB: Increment available amount and lifetime earned
+                else Holding period applies
+                    CB->>DB: Increment pending amount and lifetime earned
+                end
+
+                CB->>LEDGER: INSERT earn event with balances and ids
+                CB->>DB: COMMIT
+
+                CB-->>API: Lot earned
+                API-->>APP: Success with cashback earned
+                APP-->>C: You earned cashback
+            end
+        end
+    end
+
+    Note over LEDGER: Hourly maturation cron promotes pending into available
+    Note over LEDGER: Nightly expiration cron flips lots to expired

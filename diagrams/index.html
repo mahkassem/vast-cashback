@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cashback Module — Diagrams</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --panel: #181b22;
+    --panel-soft: #1f232c;
+    --border: #2a2f3a;
+    --text: #e8eaef;
+    --muted: #8a93a3;
+    --accent: #4ea1ff;
+    --accent-soft: #1a3a5c;
+    --green: #3ec78b;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  header {
+    padding: 28px 32px; border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #161922 0%, #0f1115 100%);
+    position: sticky; top: 0; z-index: 10;
+  }
+  header h1 { margin: 0 0 6px; font-size: 20px; letter-spacing: -0.01em; }
+  header p { margin: 0; color: var(--muted); font-size: 13px; }
+  nav {
+    margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  nav a {
+    color: var(--text); text-decoration: none; padding: 6px 12px;
+    border: 1px solid var(--border); border-radius: 999px; font-size: 12px;
+    background: var(--panel-soft); transition: all 0.15s;
+  }
+  nav a:hover { border-color: var(--accent); color: var(--accent); }
+  main { max-width: 1280px; margin: 0 auto; padding: 24px 32px 96px; }
+  section.diagram {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; margin-bottom: 32px; scroll-margin-top: 140px;
+  }
+  section.diagram h2 {
+    margin: 0 0 4px; font-size: 16px; font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+  }
+  section.diagram h2 .num {
+    background: var(--accent-soft); color: var(--accent);
+    font-size: 12px; padding: 2px 8px; border-radius: 999px;
+  }
+  section.diagram .subtitle {
+    margin: 0 0 18px; color: var(--muted); font-size: 13px;
+  }
+  .actions {
+    margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .actions button, .actions a {
+    background: var(--panel-soft); color: var(--text); border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px;
+    text-decoration: none; transition: all 0.15s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .actions button:hover, .actions a:hover { border-color: var(--accent); color: var(--accent); }
+  .actions button.copied { border-color: var(--green); color: var(--green); }
+  .mermaid-container {
+    background: #ffffff; border-radius: 8px; padding: 24px; overflow: auto;
+    text-align: center; min-height: 200px;
+  }
+  .mermaid-container svg { max-width: 100%; height: auto; }
+  details { margin-top: 14px; }
+  details summary {
+    cursor: pointer; color: var(--muted); font-size: 12px; padding: 6px 0;
+  }
+  details pre {
+    background: #0a0c10; border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px; overflow: auto; font-size: 11px; color: #c9d1d9;
+    max-height: 400px;
+  }
+  .footer-note {
+    margin-top: 48px; padding: 20px; background: var(--panel-soft);
+    border-radius: 8px; border-left: 3px solid var(--accent); color: var(--muted);
+    font-size: 13px;
+  }
+  .footer-note strong { color: var(--text); }
+  .footer-note ol { margin: 8px 0 0 20px; padding: 0; }
+  .footer-note li { margin-bottom: 6px; }
+  .footer-note code {
+    background: #0a0c10; padding: 1px 6px; border-radius: 3px;
+    font-size: 12px; color: #c9d1d9;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Cashback Module — Diagrams</h1>
+  <p>ERD + flow diagrams for VastPay cashback v0.4. Click "Open in mermaid.live" on any diagram to download as PNG/SVG.</p>
+  <nav>
+    <a href="#erd">1. ERD</a>
+    <a href="#configure">2. Configure</a>
+    <a href="#register">3. Register & Enroll</a>
+    <a href="#earn">4. Earn</a>
+    <a href="#redeem">5. Redeem</a>
+    <a href="#refund">6. Refund</a>
+  </nav>
+</header>
+
+<main>
+
+<section class="diagram" id="erd">
+  <h2><span class="num">1</span> Entity-Relationship Diagram</h2>
+  <p class="subtitle">7 cashback tables + their links to existing <code>restaurants</code>, <code>users</code>, <code>payments</code>.</p>
+  <div class="actions">
+    <button class="copy-btn" data-target="src-erd">Copy source</button>
+    <a class="open-live" data-target="src-erd" target="_blank">Open in mermaid.live →</a>
+  </div>
+  <div class="mermaid-container"><pre class="mermaid" id="d-erd"></pre></div>
+  <details><summary>Show source</summary><pre id="src-erd"></pre></details>
+</section>
+
+<section class="diagram" id="configure">
+  <h2><span class="num">2</span> Configure Cashback</h2>
+  <p class="subtitle">Vast admin or merchant edits the cashback program. Each save is a new immutable version.</p>
+  <div class="actions">
+    <button class="copy-btn" data-target="src-configure">Copy source</button>
+    <a class="open-live" data-target="src-configure" target="_blank">Open in mermaid.live →</a>
+  </div>
+  <div class="mermaid-container"><pre class="mermaid" id="d-configure"></pre></div>
+  <details><summary>Show source</summary><pre id="src-configure"></pre></details>
+</section>
+
+<section class="diagram" id="register">
+  <h2><span class="num">3</span> Register & Enrollment</h2>
+  <p class="subtitle">Customer scans QR, registers with phone + name, OTP-verified, links to existing user account if present.</p>
+  <div class="actions">
+    <button class="copy-btn" data-target="src-register">Copy source</button>
+    <a class="open-live" data-target="src-register" target="_blank">Open in mermaid.live →</a>
+  </div>
+  <div class="mermaid-container"><pre class="mermaid" id="d-register"></pre></div>
+  <details><summary>Show source</summary><pre id="src-register"></pre></details>
+</section>
+
+<section class="diagram" id="earn">
+  <h2><span class="num">4</span> Earn Cashback</h2>
+  <p class="subtitle">Triggered post-payment via gateway webhook. Computes lot, updates balance, writes ledger event.</p>
+  <div class="actions">
+    <button class="copy-btn" data-target="src-earn">Copy source</button>
+    <a class="open-live" data-target="src-earn" target="_blank">Open in mermaid.live →</a>
+  </div>
+  <div class="mermaid-container"><pre class="mermaid" id="d-earn"></pre></div>
+  <details><summary>Show source</summary><pre id="src-earn"></pre></details>
+</section>
+
+<section class="diagram" id="redeem">
+  <h2><span class="num">5</span> Redeem Cashback</h2>
+  <p class="subtitle">Atomic FIFO consumption across lots with <code>SELECT ... FOR UPDATE</code> locking, plus the void path for gateway declines.</p>
+  <div class="actions">
+    <button class="copy-btn" data-target="src-redeem">Copy source</button>
+    <a class="open-live" data-target="src-redeem" target="_blank">Open in mermaid.live →</a>
+  </div>
+  <div class="mermaid-container"><pre class="mermaid" id="d-redeem"></pre></div>
+  <details><summary>Show source</summary><pre id="src-redeem"></pre></details>
+</section>
+
+<section class="diagram" id="refund">
+  <h2><span class="num">6</span> Refund Order</h2>
+  <p class="subtitle">Fees-only reversal. Refund <code>payable_total</code> via gateway, emit <code>reverse_vast_fee</code> ledger events, lots and redemptions stay untouched. Used cashback is non-refundable.</p>
+  <div class="actions">
+    <button class="copy-btn" data-target="src-refund">Copy source</button>
+    <a class="open-live" data-target="src-refund" target="_blank">Open in mermaid.live →</a>
+  </div>
+  <div class="mermaid-container"><pre class="mermaid" id="d-refund"></pre></div>
+  <details><summary>Show source</summary><pre id="src-refund"></pre></details>
+</section>
+
+<div class="footer-note">
+  <strong>Importing into ClickUp</strong>
+  <ol>
+    <li><strong>ClickUp Docs:</strong> click "Copy source" on any diagram, then in ClickUp Docs paste into a code block with language set to <code>mermaid</code>. ClickUp renders Mermaid natively.</li>
+    <li><strong>ClickUp Whiteboards:</strong> click "Open in mermaid.live", then in the editor click <em>Actions → PNG</em> (or SVG) and download. Drag the file onto your whiteboard.</li>
+    <li><strong>For editing:</strong> the <code>.mermaid</code> source files live alongside this HTML file in the <code>diagrams/</code> folder.</li>
+  </ol>
+</div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+  // === Diagram sources ===
+  // Each value is base64-encoded UTF-8 of the .mermaid source.
+  // decodeUtf8Base64() below converts back to the original string.
+  const sources = {
+    erd: atob("ZXJEaWFncmFtCiAgICByZXN0YXVyYW50cyB8fC0tb3sgY2FzaGJhY2tfY29uZmlndXJhdGlvbnMgOiAiaGFzIHZlcnNpb25lZCIKICAgIHJlc3RhdXJhbnRzIHx8LS1veyBjYXNoYmFja19lbnJvbGxtZW50cyA6ICJvd25zIgogICAgdXNlcnMgfHwtLW97IGNhc2hiYWNrX2Vucm9sbG1lbnRzIDogImxpbmtlZCAobnVsbGFibGUpIgogICAgY2FzaGJhY2tfZW5yb2xsbWVudHMgfHwtLW97IGNhc2hiYWNrX2xvdHMgOiAiZWFybnMgaW50byIKICAgIGNhc2hiYWNrX2Vucm9sbG1lbnRzIHx8LS1veyBjYXNoYmFja19yZWRlbXB0aW9ucyA6ICJzcGVuZHMgZnJvbSIKICAgIGNhc2hiYWNrX2Vucm9sbG1lbnRzIHx8LS18fCBjYXNoYmFja19iYWxhbmNlcyA6ICJjYWNoZWQgYXMiCiAgICBjYXNoYmFja19lbnJvbGxtZW50cyB8fC0tb3sgY2FzaGJhY2tfbGVkZ2VyIDogImV2ZW50cyBmb3IiCiAgICBwYXltZW50cyB8fC0tb3sgY2FzaGJhY2tfbG90cyA6ICJlYXJuZWQgdmlhIgogICAgcGF5bWVudHMgfHwtLW97IGNhc2hiYWNrX3JlZGVtcHRpb25zIDogImFwcGxpZWQgdG8iCiAgICBjYXNoYmFja19sb3RzIHx8LS1veyBjYXNoYmFja19yZWRlbXB0aW9uX2NvbnN1bXB0aW9ucyA6ICJkcmFpbmVkIGJ5IgogICAgY2FzaGJhY2tfcmVkZW1wdGlvbnMgfHwtLW97IGNhc2hiYWNrX3JlZGVtcHRpb25fY29uc3VtcHRpb25zIDogImNvbnN1bWVzIgoKICAgIHJlc3RhdXJhbnRzIHsKICAgICAgICBjaGFyKDM2KSBpZCBQSwogICAgICAgIHN0cmluZyBuYW1lX2VuCiAgICAgICAgYm9vbCBpc190aXBzCiAgICB9CiAgICB1c2VycyB7CiAgICAgICAgY2hhcigzNikgaWQgUEsKICAgICAgICBzdHJpbmcgcGhvbmUgVUsKICAgICAgICB0aW1lc3RhbXAgcGhvbmVfdmVyaWZpZWRfYXQKICAgICAgICBlbnVtIHJvbGUKICAgIH0KICAgIHBheW1lbnRzIHsKICAgICAgICBjaGFyKDM2KSBpZCBQSwogICAgICAgIGNoYXIoMzYpIG9yZGVyX2lkIEZLCiAgICAgICAgY2hhcigzNikgcmVzdGF1cmFudF9pZCBGSwogICAgICAgIGNoYXIoMzYpIHVzZXJfaWQgIm51bGxhYmxlIgogICAgICAgIGJvb2wgaXNfcmVmdW5kCiAgICAgICAgZGVjaW1hbCB0b3RhbF9hZnRlcl9jb21taXNzaW9uCiAgICB9CiAgICBjYXNoYmFja19jb25maWd1cmF0aW9ucyB7CiAgICAgICAgYmlnaW50IGlkIFBLCiAgICAgICAgY2hhcigzNikgcmVzdGF1cmFudF9pZCBGSwogICAgICAgIGRlY2ltYWwgcGVyY2VudGFnZQogICAgICAgIGRlY2ltYWwgY2FwX2Ftb3VudCAiMD11bmxpbWl0ZWQiCiAgICAgICAgaW50IGV4cGlyYXRpb25fZGF5cwogICAgICAgIGRlY2ltYWwgbWluX2ludm9pY2VfYW1vdW50CiAgICAgICAgYm9vbCBpc19hY3RpdmUKICAgICAgICBib29sIGlzX21hbmRhdG9yeV90b19jaGVja291dAogICAgICAgIGJvb2wgbWVyY2hhbnRfY2FuX2VkaXQKICAgICAgICBkZWNpbWFsIHZhc3RfZmVlX3BlcmNlbnRhZ2UKICAgICAgICBpbnQgdmVyc2lvbiAibWF4PWN1cnJlbnQiCiAgICAgICAgY2hhcigzNikgdXBkYXRlZF9ieSBGSwogICAgfQogICAgY2FzaGJhY2tfZW5yb2xsbWVudHMgewogICAgICAgIGNoYXIoMzYpIGlkIFBLCiAgICAgICAgY2hhcigzNikgcmVzdGF1cmFudF9pZCBGSwogICAgICAgIGNoYXIoMzYpIHVzZXJfaWQgRksgIm51bGxhYmxlIgogICAgICAgIHN0cmluZyBwaG9uZQogICAgICAgIHN0cmluZyBmdWxsX25hbWUKICAgICAgICBlbnVtIHN0YXR1cwogICAgICAgIHRpbWVzdGFtcCBvcHRlZF9pbl9hdAogICAgICAgIHRpbWVzdGFtcCBvcHRlZF9vdXRfYXQKICAgIH0KICAgIGNhc2hiYWNrX2xvdHMgewogICAgICAgIGNoYXIoMzYpIGlkIFBLCiAgICAgICAgY2hhcigzNikgZW5yb2xsbWVudF9pZCBGSwogICAgICAgIGNoYXIoMzYpIHJlc3RhdXJhbnRfaWQgRksKICAgICAgICBjaGFyKDM2KSBwYXltZW50X2lkIEZLCiAgICAgICAgaW50IGNvbmZpZ3VyYXRpb25fdmVyc2lvbgogICAgICAgIGRlY2ltYWwgZWxpZ2libGVfYW1vdW50CiAgICAgICAgZGVjaW1hbCBlYXJuX2Ftb3VudAogICAgICAgIGRlY2ltYWwgdmFzdF9mZWVfYW1vdW50CiAgICAgICAgZGVjaW1hbCBjb25zdW1lZF9hbW91bnQKICAgICAgICBkZWNpbWFsIGV4cGlyZWRfYW1vdW50CiAgICAgICAgZW51bSBzdGF0dXMKICAgICAgICB0aW1lc3RhbXAgZWFybmVkX2F0CiAgICAgICAgdGltZXN0YW1wIGF2YWlsYWJsZV9hdAogICAgICAgIHRpbWVzdGFtcCBleHBpcmVzX2F0CiAgICB9CiAgICBjYXNoYmFja19yZWRlbXB0aW9ucyB7CiAgICAgICAgY2hhcigzNikgaWQgUEsKICAgICAgICBjaGFyKDM2KSBlbnJvbGxtZW50X2lkIEZLCiAgICAgICAgY2hhcigzNikgcmVzdGF1cmFudF9pZCBGSwogICAgICAgIGNoYXIoMzYpIHBheW1lbnRfaWQgRksKICAgICAgICBkZWNpbWFsIGFtb3VudAogICAgICAgIGVudW0gc3RhdHVzCiAgICAgICAgdGltZXN0YW1wIHJlZGVlbWVkX2F0CiAgICAgICAgdGltZXN0YW1wIHZvaWRlZF9hdAogICAgICAgIHN0cmluZyB2b2lkX3JlYXNvbgogICAgfQogICAgY2FzaGJhY2tfcmVkZW1wdGlvbl9jb25zdW1wdGlvbnMgewogICAgICAgIGJpZ2ludCBpZCBQSwogICAgICAgIGNoYXIoMzYpIHJlZGVtcHRpb25faWQgRksKICAgICAgICBjaGFyKDM2KSBsb3RfaWQgRksKICAgICAgICBkZWNpbWFsIGFtb3VudF9jb25zdW1lZAogICAgfQogICAgY2FzaGJhY2tfYmFsYW5jZXMgewogICAgICAgIGNoYXIoMzYpIGlkIFBLCiAgICAgICAgY2hhcigzNikgZW5yb2xsbWVudF9pZCBGSyxVSwogICAgICAgIGNoYXIoMzYpIHJlc3RhdXJhbnRfaWQgRksKICAgICAgICBkZWNpbWFsIGF2YWlsYWJsZV9hbW91bnQKICAgICAgICBkZWNpbWFsIHBlbmRpbmdfYW1vdW50CiAgICAgICAgZGVjaW1hbCBsaWZldGltZV9lYXJuZWQKICAgICAgICBkZWNpbWFsIGxpZmV0aW1lX3JlZGVlbWVkCiAgICAgICAgZGVjaW1hbCBsaWZldGltZV9leHBpcmVkCiAgICAgICAgdGltZXN0YW1wIGxhc3RfcmVjYWxjdWxhdGVkX2F0CiAgICB9CiAgICBjYXNoYmFja19sZWRnZXIgewogICAgICAgIGJpZ2ludCBpZCBQSwogICAgICAgIGNoYXIoMzYpIGVucm9sbG1lbnRfaWQgRksKICAgICAgICBjaGFyKDM2KSByZXN0YXVyYW50X2lkIEZLCiAgICAgICAgZW51bSBldmVudF90eXBlICJlYXJufHJlZGVlbXxtYXR1cmV8ZXhwaXJlfHZvaWRfcmVkZW1wdGlvbnxyZXZlcnNlX3Zhc3RfZmVlfG1hbnVhbF9hZGp1c3QiCiAgICAgICAgZGVjaW1hbCBhbW91bnQgInNpZ25lZCIKICAgICAgICBkZWNpbWFsIGF2YWlsYWJsZV9iYWxhbmNlX2JlZm9yZQogICAgICAgIGRlY2ltYWwgYXZhaWxhYmxlX2JhbGFuY2VfYWZ0ZXIKICAgICAgICBjaGFyKDM2KSBsb3RfaWQgIm51bGxhYmxlIgogICAgICAgIGNoYXIoMzYpIHJlZGVtcHRpb25faWQgIm51bGxhYmxlIgogICAgICAgIGNoYXIoMzYpIHBheW1lbnRfaWQgIm51bGxhYmxlIgogICAgICAgIHRleHQgZGVzY3JpcHRpb24KICAgICAgICBjaGFyKDM2KSBjcmVhdGVkX2J5X3VzZXJfaWQgIm51bGxhYmxlIgogICAgICAgIHRpbWVzdGFtcCBjcmVhdGVkX2F0CiAgICB9Cg=="),
+    configure: atob("c2VxdWVuY2VEaWFncmFtCiAgICBhdXRvbnVtYmVyCiAgICBhY3RvciBVIGFzIFZhc3QgQWRtaW4gb3IgTWVyY2hhbnQKICAgIHBhcnRpY2lwYW50IEZFIGFzIEFkbWluIC8gTWVyY2hhbnQgVUkKICAgIHBhcnRpY2lwYW50IEFQSSBhcyBDYXNoYmFja0NvbmZpZ3VyYXRpb25Db250cm9sbGVyCiAgICBwYXJ0aWNpcGFudCBTVkMgYXMgQ2FzaGJhY2tTZXJ2aWNlCiAgICBwYXJ0aWNpcGFudCBSRVBPIGFzIENhc2hiYWNrQ29uZmlndXJhdGlvblJlcG9zaXRvcnkKICAgIHBhcnRpY2lwYW50IERCIGFzIE15U1FMCiAgICBwYXJ0aWNpcGFudCBDQUNIRSBhcyBDYWNoZSAoUmVkaXMpCgogICAgVS0+PkZFOiBPcGVuIENhc2hiYWNrIHNldHRpbmdzCiAgICBGRS0+PkFQSTogR0VUIC9yZXN0YXVyYW50cy97aWR9L2Nhc2hiYWNrL2NvbmZpZwogICAgQVBJLT4+U1ZDOiBnZXRSZXN0YXVyYW50Q29uZmlnKGlkKQogICAgU1ZDLT4+Q0FDSEU6IGdldCBjYXNoYmFja19jb25maWc6e2lkfQogICAgYWx0IGNhY2hlIGhpdAogICAgICAgIENBQ0hFLS0+PlNWQzogY29uZmlnCiAgICBlbHNlIGNhY2hlIG1pc3MKICAgICAgICBTVkMtPj5SRVBPOiBnZXRBY3RpdmVCeVJlc3RhdXJhbnQoaWQpCiAgICAgICAgUkVQTy0+PkRCOiBTRUxFQ1QgKiBGUk9NIGNhc2hiYWNrX2NvbmZpZ3VyYXRpb25zIFdIRVJFIHJlc3RhdXJhbnRfaWQ9PyBPUkRFUiBCWSB2ZXJzaW9uIERFU0MgTElNSVQgMQogICAgICAgIERCLS0+PlJFUE86IGxhdGVzdCB2ZXJzaW9uIHJvdwogICAgICAgIFJFUE8tLT4+U1ZDOiBjb25maWcKICAgICAgICBTVkMtPj5DQUNIRTogc2V0IGNhc2hiYWNrX2NvbmZpZzp7aWR9IFRUTD0xaAogICAgZW5kCiAgICBTVkMtLT4+QVBJOiBjb25maWcKICAgIEFQSS0tPj5GRTogMjAwIE9LIHsgY29uZmlnIH0KICAgIEZFLS0+PlU6IFNob3cgZm9ybSAocmVhZC1vbmx5IGZpZWxkcyBpZiB1c2VyVHlwZT1yZXN0YXVyYW50ICYmICFtZXJjaGFudF9jYW5fZWRpdCkKCiAgICBVLT4+RkU6IFN1Ym1pdCBjaGFuZ2VzIChwZXJjZW50YWdlLCBjYXAsIGV4cGlyYXRpb25fZGF5cywgLi4uKQogICAgRkUtPj5BUEk6IFBVVCAvcmVzdGF1cmFudHMve2lkfS9jYXNoYmFjay9jb25maWcKICAgIEFQSS0+PlNWQzogc2V0Q29uZmlndXJhdGlvbihpZCwgcGF5bG9hZCwgdXBkYXRlZEJ5LCB1c2VyVHlwZSkKCiAgICBhbHQgdXNlclR5cGU9cmVzdGF1cmFudAogICAgICAgIFNWQy0+PlNWQzogdmFsaWRhdGUgcHJvaGliaXRlZCBmaWVsZHMgKGlzX2FjdGl2ZSwgaXNfbWFuZGF0b3J5X3RvX2NoZWNrb3V0LCBtZXJjaGFudF9jYW5fZWRpdCwgdmFzdF9mZWVfcGVyY2VudGFnZSkgYWJzZW50CiAgICAgICAgU1ZDLT4+UkVQTzogZ2V0TGF0ZXN0QnlSZXN0YXVyYW50KGlkKQogICAgICAgIFJFUE8tLT4+U1ZDOiBsYXRlc3QKICAgICAgICBTVkMtPj5TVkM6IGFzc2VydCBsYXRlc3QubWVyY2hhbnRfY2FuX2VkaXQgPT0gdHJ1ZQogICAgZW5kCgogICAgU1ZDLT4+U1ZDOiB2YWxpZGF0ZSByYW5nZXMgKDEgPD0gcGVyY2VudGFnZSA8PSAxMDAsIGNhcF9hbW91bnQgPj0gMCwgZXhwaXJhdGlvbl9kYXlzID4gMCwgbWluX2ludm9pY2VfYW1vdW50ID49IDApCiAgICBTVkMtPj5SRVBPOiBjcmVhdGVOZXdWZXJzaW9uKHBheWxvYWQsIHJlc3RhdXJhbnRJZCwgdXBkYXRlZEJ5KQogICAgUkVQTy0+PkRCOiBCRUdJTgogICAgUkVQTy0+PkRCOiBTRUxFQ1QgTUFYKHZlcnNpb24pIEZST00gY2FzaGJhY2tfY29uZmlndXJhdGlvbnMgV0hFUkUgcmVzdGF1cmFudF9pZD0/CiAgICBEQi0tPj5SRVBPOiBsYXRlc3QgdmVyc2lvbiB2CiAgICBSRVBPLT4+REI6IElOU0VSVCBjYXNoYmFja19jb25maWd1cmF0aW9ucyAoLi4ucGF5bG9hZC4uLiwgdmVyc2lvbiA9IHYrMSwgdXBkYXRlZF9ieSwgLi4uKQogICAgREItLT4+UkVQTzogcm93IGluc2VydGVkIChpZCwgdmVyc2lvbj12KzEpCiAgICBSRVBPLT4+REI6IENPTU1JVAogICAgUkVQTy0tPj5TVkM6IG5ldyBjb25maWcKICAgIFNWQy0+PkNBQ0hFOiBmb3JnZXQgY2FzaGJhY2tfY29uZmlnOntpZH0KICAgIFNWQy0tPj5BUEk6IG5ldyBjb25maWcKICAgIEFQSS0tPj5GRTogMjAwIE9LIHsgY29uZmlnIH0KICAgIEZFLS0+PlU6IFNhdmVkIChoaXN0b3J5IHNob3dzIHByZXZpb3VzIHZlcnNpb25zKQoKICAgIE5vdGUgb3ZlciBEQjogRWFybGllciB2ZXJzaW9ucyByZW1haW4gaW1tdXRhYmxlLjxici8+TGF0ZXN0IHZlcnNpb24gaXMgY3VycmVudC48YnIvPkxvdHMgcmVmZXJlbmNlIGNvbmZpZ3VyYXRpb25fdmVyc2lvbiw8YnIvPnNvIGNoYW5nZXMgbmV2ZXIgYWx0ZXIgZWFybmVkIHRlcm1zLgo="),
+    register: atob("c2VxdWVuY2VEaWFncmFtCiAgICBhdXRvbnVtYmVyCiAgICBhY3RvciBDIGFzIEN1c3RvbWVyCiAgICBwYXJ0aWNpcGFudCBBUFAgYXMgQ3VzdG9tZXIgQXBwIC8gV2ViCiAgICBwYXJ0aWNpcGFudCBBUEkgYXMgQ2FzaGJhY2tFbnJvbGxtZW50Q29udHJvbGxlcgogICAgcGFydGljaXBhbnQgU1ZDIGFzIEVucm9sbG1lbnRTZXJ2aWNlCiAgICBwYXJ0aWNpcGFudCBPVFAgYXMgT1RQIFNlcnZpY2UKICAgIHBhcnRpY2lwYW50IFVTRVJTIGFzIHVzZXJzIHRhYmxlCiAgICBwYXJ0aWNpcGFudCBEQiBhcyBNeVNRTAoKICAgIEMtPj5BUFA6IFNjYW4gcmVzdGF1cmFudCBRUgogICAgQVBQLT4+QVBJOiBHRVQgL3Jlc3RhdXJhbnRzL3tpZH0vY2FzaGJhY2svcHJldmlldwogICAgQVBJLS0+PkFQUDogeyBpc19hY3RpdmUsIHBlcmNlbnRhZ2UsIGNhcF9hbW91bnQsIG1pbl9pbnZvaWNlX2Ftb3VudCwgc2FtcGxlX2Vhcm5fZm9yKGFtb3VudCkgfQogICAgQVBQLS0+PkM6ICJFYXJuIHVwIHRvIFggU0FSIGNhc2hiYWNrIG9uIG5leHQgcHVyY2hhc2UiCgogICAgQy0+PkFQUDogVGFwICJKb2luIGNhc2hiYWNrIHByb2dyYW0iCiAgICBBUFAtLT4+QzogRm9ybSAocGhvbmUgRS4xNjQsIGZ1bGxfbmFtZSkKICAgIEMtPj5BUFA6IEVudGVyIHBob25lICsgZnVsbF9uYW1lLCBzdWJtaXQKICAgIEFQUC0+PkFQSTogUE9TVCAvcmVzdGF1cmFudHMve2lkfS9jYXNoYmFjay9lbnJvbGwvc3RhcnQgeyBwaG9uZSwgZnVsbF9uYW1lIH0KCiAgICBBUEktPj5TVkM6IHN0YXJ0RW5yb2xsbWVudChyZXN0YXVyYW50SWQsIHBob25lLCBmdWxsTmFtZSkKICAgIFNWQy0+PkRCOiBTRUxFQ1QgaWQgRlJPTSBjYXNoYmFja19lbnJvbGxtZW50cyBXSEVSRSByZXN0YXVyYW50X2lkPT8gQU5EIHBob25lPT8KICAgIGFsdCBhbHJlYWR5IGVucm9sbGVkICYgc3RhdHVzPWFjdGl2ZQogICAgICAgIERCLS0+PlNWQzogZXhpc3RpbmcgZW5yb2xsbWVudAogICAgICAgIFNWQy0tPj5BUEk6IDIwMCB7IGFscmVhZHlfZW5yb2xsZWQ6IHRydWUgfQogICAgICAgIEFQSS0tPj5BUFA6IHsgYWxyZWFkeV9lbnJvbGxlZDogdHJ1ZSB9CiAgICAgICAgQVBQLS0+PkM6ICJZb3UncmUgYWxyZWFkeSBlbnJvbGxlZCIKICAgIGVsc2Ugbm90IGVucm9sbGVkCiAgICAgICAgU1ZDLT4+T1RQOiBzZW5kX290cChwaG9uZSkKICAgICAgICBPVFAtLT4+U1ZDOiBvdHBfdG9rZW4KICAgICAgICBTVkMtLT4+QVBJOiB7IG90cF90b2tlbiB9CiAgICAgICAgQVBJLS0+PkFQUDogeyBvdHBfdG9rZW4gfQogICAgICAgIEFQUC0tPj5DOiBFbnRlciBjb2RlCgogICAgICAgIEMtPj5BUFA6IDYtZGlnaXQgY29kZQogICAgICAgIEFQUC0+PkFQSTogUE9TVCAvY2FzaGJhY2svZW5yb2xsL3ZlcmlmeSB7IG90cF90b2tlbiwgY29kZSwgcmVzdGF1cmFudElkLCBwaG9uZSwgZnVsbF9uYW1lIH0KICAgICAgICBBUEktPj5PVFA6IHZlcmlmeShvdHBfdG9rZW4sIGNvZGUpCiAgICAgICAgT1RQLS0+PkFQSTogb2sKCiAgICAgICAgQVBJLT4+U1ZDOiBjb21wbGV0ZUVucm9sbG1lbnQocmVzdGF1cmFudElkLCBwaG9uZSwgZnVsbE5hbWUpCiAgICAgICAgU1ZDLT4+VVNFUlM6IFNFTEVDVCBpZCBGUk9NIHVzZXJzIFdIRVJFIHBob25lPT8gQU5EIGRlbGV0ZWRfYXQgSVMgTlVMTAogICAgICAgIGFsdCB1c2VycyByb3cgZXhpc3RzCiAgICAgICAgICAgIFVTRVJTLS0+PlNWQzogdXNlcl9pZAogICAgICAgICAgICBOb3RlIG92ZXIgU1ZDOiBMaW5rIGVucm9sbG1lbnQgdG8gZXhpc3RpbmcgVmFzdFBheSB1c2VyCiAgICAgICAgZWxzZSBubyB1c2VyIHJvdwogICAgICAgICAgICBVU0VSUy0tPj5TVkM6IG51bGwKICAgICAgICAgICAgTm90ZSBvdmVyIFNWQzogT3B0aW9uYWw6IGNyZWF0ZSB1c2VycyByb3cgd2l0aCByb2xlPXVzZXIsIHR5cGU9dXNlciwgcGhvbmVfdmVyaWZpZWRfYXQ9bm93KCkKICAgICAgICBlbmQKCiAgICAgICAgU1ZDLT4+REI6IEJFR0lOCiAgICAgICAgU1ZDLT4+REI6IElOU0VSVCBjYXNoYmFja19lbnJvbGxtZW50cyAocmVzdGF1cmFudF9pZCwgdXNlcl9pZCwgcGhvbmUsIGZ1bGxfbmFtZSwgc3RhdHVzPSdhY3RpdmUnLCBvcHRlZF9pbl9hdD1ub3coKSkKICAgICAgICBTVkMtPj5EQjogSU5TRVJUIGNhc2hiYWNrX2JhbGFuY2VzIChlbnJvbGxtZW50X2lkLCByZXN0YXVyYW50X2lkLCBhdmFpbGFibGVfYW1vdW50PTAsIHBlbmRpbmdfYW1vdW50PTAsIC4uLikKICAgICAgICBTVkMtPj5EQjogQ09NTUlUCgogICAgICAgIFNWQy0tPj5BUEk6IGVucm9sbG1lbnQKICAgICAgICBBUEktLT4+QVBQOiAyMDEgeyBlbnJvbGxtZW50IH0KICAgICAgICBBUFAtLT4+QzogIllvdSdyZSBpbi4gUGF5IHRvIHN0YXJ0IGVhcm5pbmcuIgogICAgZW5kCg=="),
+    earn: atob("c2VxdWVuY2VEaWFncmFtCiAgICBhdXRvbnVtYmVyCiAgICBhY3RvciBDIGFzIEN1c3RvbWVyCiAgICBwYXJ0aWNpcGFudCBBUFAgYXMgQ3VzdG9tZXIgQXBwCiAgICBwYXJ0aWNpcGFudCBQQVkgYXMgUGF5bWVudCBGbG93CiAgICBwYXJ0aWNpcGFudCBHVyBhcyBQYXltZW50IEdhdGV3YXkKICAgIHBhcnRpY2lwYW50IFdIIGFzIEdhdGV3YXkgV2ViaG9vawogICAgcGFydGljaXBhbnQgQVBJIGFzIFBheW1lbnQgQ29udHJvbGxlcgogICAgcGFydGljaXBhbnQgQ0IgYXMgQ2FzaGJhY2sgRWFybiBTZXJ2aWNlCiAgICBwYXJ0aWNpcGFudCBDRkcgYXMgQ2FzaGJhY2sgU2VydmljZQogICAgcGFydGljaXBhbnQgREIgYXMgTXlTUUwKICAgIHBhcnRpY2lwYW50IExFREdFUiBhcyBDYXNoYmFjayBMZWRnZXIKCiAgICBDLT4+QVBQOiBDb25maXJtIHBheW1lbnQKICAgIEFQUC0+PlBBWTogUE9TVCBwYXltZW50cwogICAgUEFZLT4+R1c6IENyZWF0ZSBwYXltZW50IGludGVudAogICAgR1ctLT4+UEFZOiBwYXltZW50VVJMCiAgICBQQVktLT4+QVBQOiBwYXltZW50VVJMCiAgICBBUFAtPj5HVzogUmVkaXJlY3QgdGhyb3VnaCAzRFMgb3Igd2FsbGV0CiAgICBHVy0tPj5XSDogV2ViaG9vayBwYXltZW50IHN0YXR1cyBTdWNjZXNzZnVsCiAgICBXSC0+PkFQSTogSGFuZGxlIHBhaWQgd2ViaG9vawogICAgQVBJLT4+QVBJOiBVcGRhdGUgcGF5bWVudCBzdGF0dXMgYW5kIHBhaWQgYXQKICAgIEFQSS0+PkFQSTogVXBkYXRlIG9yZGVyIHN0YXR1cyB0byBwYWlkCgogICAgQVBJLT4+Q0I6IE9uIHBheW1lbnQgcGFpZAogICAgQ0ItPj5DRkc6IEdldCByZXN0YXVyYW50IGNvbmZpZwogICAgQ0ZHLS0+PkNCOiBDb25maWcgb3IgbnVsbAoKICAgIGFsdCBObyBjb25maWcgb3IgcHJvZ3JhbSBpbmFjdGl2ZQogICAgICAgIENCLS0+PkFQSTogU2tpcCAtIG5vIGNhc2hiYWNrIHByb2dyYW0KICAgIGVsc2UgUHJvZ3JhbSBhY3RpdmUKICAgICAgICBDQi0+PkNCOiBDb21wdXRlIGVsaWdpYmxlIGFtb3VudCBmcm9tIG9yZGVyIHRvdGFsCiAgICAgICAgTm90ZSByaWdodCBvZiBDQjogVmFzdFBheSB0b2RheSB1c2VzIG9yZGVyIHRvdGFsCiAgICAgICAgTm90ZSByaWdodCBvZiBDQjogVmFzdE1lbnUgbGF0ZXIgc3VidHJhY3RzIHRpcHMKCiAgICAgICAgYWx0IEJlbG93IG1pbmltdW0gaW52b2ljZSBhbW91bnQKICAgICAgICAgICAgQ0ItLT4+QVBJOiBTa2lwIC0gYmVsb3cgdGhyZXNob2xkCiAgICAgICAgZWxzZSBBbW91bnQgaXMgZWxpZ2libGUKICAgICAgICAgICAgQ0ItPj5EQjogRmluZCBlbnJvbGxtZW50IGJ5IHBob25lIG9yIHVzZXIKICAgICAgICAgICAgYWx0IE5vIGVucm9sbG1lbnQKICAgICAgICAgICAgICAgIE5vdGUgb3ZlciBDQjogSWYgbWFuZGF0b3J5IGF0IGNoZWNrb3V0IHRoZSBjdXN0b21lciB3YXMgYWxyZWFkeSBibG9ja2VkCiAgICAgICAgICAgICAgICBOb3RlIG92ZXIgQ0I6IE90aGVyd2lzZSBzaWxlbnRseSBza2lwCiAgICAgICAgICAgICAgICBDQi0tPj5BUEk6IFNraXAgLSBub3QgZW5yb2xsZWQKICAgICAgICAgICAgZWxzZSBIYXMgZW5yb2xsbWVudAogICAgICAgICAgICAgICAgREItLT4+Q0I6IEVucm9sbG1lbnQgcm93CgogICAgICAgICAgICAgICAgQ0ItPj5DQjogQ29tcHV0ZSByYXcgY2FzaGJhY2sKICAgICAgICAgICAgICAgIENCLT4+Q0I6IEFwcGx5IHBlciB0cmFuc2FjdGlvbiBjYXAKICAgICAgICAgICAgICAgIENCLT4+Q0I6IENvbXB1dGUgdmFzdCBmZWUgb24gZWxpZ2libGUgYW1vdW50CiAgICAgICAgICAgICAgICBDQi0+PkNCOiBDb21wdXRlIGF2YWlsYWJsZSBhdCBhbmQgZXhwaXJlcyBhdAoKICAgICAgICAgICAgICAgIENCLT4+REI6IEJFR0lOCiAgICAgICAgICAgICAgICBDQi0+PkRCOiBJTlNFUlQgY2FzaGJhY2sgbG90CiAgICAgICAgICAgICAgICBEQi0tPj5DQjogTG90IGlkCgogICAgICAgICAgICAgICAgYWx0IEF2YWlsYWJsZSBpbW1lZGlhdGVseQogICAgICAgICAgICAgICAgICAgIENCLT4+REI6IEluY3JlbWVudCBhdmFpbGFibGUgYW1vdW50IGFuZCBsaWZldGltZSBlYXJuZWQKICAgICAgICAgICAgICAgIGVsc2UgSG9sZGluZyBwZXJpb2QgYXBwbGllcwogICAgICAgICAgICAgICAgICAgIENCLT4+REI6IEluY3JlbWVudCBwZW5kaW5nIGFtb3VudCBhbmQgbGlmZXRpbWUgZWFybmVkCiAgICAgICAgICAgICAgICBlbmQKCiAgICAgICAgICAgICAgICBDQi0+PkxFREdFUjogSU5TRVJUIGVhcm4gZXZlbnQgd2l0aCBiYWxhbmNlcyBhbmQgaWRzCiAgICAgICAgICAgICAgICBDQi0+PkRCOiBDT01NSVQKCiAgICAgICAgICAgICAgICBDQi0tPj5BUEk6IExvdCBlYXJuZWQKICAgICAgICAgICAgICAgIEFQSS0tPj5BUFA6IFN1Y2Nlc3Mgd2l0aCBjYXNoYmFjayBlYXJuZWQKICAgICAgICAgICAgICAgIEFQUC0tPj5DOiBZb3UgZWFybmVkIGNhc2hiYWNrCiAgICAgICAgICAgIGVuZAogICAgICAgIGVuZAogICAgZW5kCgogICAgTm90ZSBvdmVyIExFREdFUjogSG91cmx5IG1hdHVyYXRpb24gY3JvbiBwcm9tb3RlcyBwZW5kaW5nIGludG8gYXZhaWxhYmxlCiAgICBOb3RlIG92ZXIgTEVER0VSOiBOaWdodGx5IGV4cGlyYXRpb24gY3JvbiBmbGlwcyBsb3RzIHRvIGV4cGlyZWQK"),
+    redeem: atob("c2VxdWVuY2VEaWFncmFtCiAgICBhdXRvbnVtYmVyCiAgICBhY3RvciBDIGFzIEN1c3RvbWVyCiAgICBwYXJ0aWNpcGFudCBBUFAgYXMgQ3VzdG9tZXIgQXBwCiAgICBwYXJ0aWNpcGFudCBBUEkgYXMgQ2FzaGJhY2sgUmVkZWVtIFNlcnZpY2UKICAgIHBhcnRpY2lwYW50IERCIGFzIE15U1FMCiAgICBwYXJ0aWNpcGFudCBMRURHRVIgYXMgQ2FzaGJhY2sgTGVkZ2VyCiAgICBwYXJ0aWNpcGFudCBQQVkgYXMgUGF5bWVudCBGbG93CiAgICBwYXJ0aWNpcGFudCBHVyBhcyBQYXltZW50IEdhdGV3YXkKCiAgICBDLT4+QVBQOiBBdCBjaGVja291dCBzaWduIGluIHdpdGggcGhvbmUKICAgIEFQUC0+PkFQSTogR0VUIGNhc2hiYWNrIGJhbGFuY2UKICAgIEFQSS0+PkRCOiBTRUxFQ1QgZW5yb2xsbWVudCBhbmQgYmFsYW5jZXMKICAgIERCLS0+PkFQSTogQXZhaWxhYmxlIGFuZCBwZW5kaW5nIGFtb3VudHMKICAgIEFQSS0tPj5BUFA6IEJhbGFuY2UKICAgIEFQUC0tPj5DOiBTaG93IGJhbGFuY2UgYW5kIG9mZmVyIHRvIGFwcGx5CiAgICBDLT4+QVBQOiBBcHBseSBhbW91bnQgWSB1cCB0byBhdmFpbGFibGUKCiAgICBBUFAtPj5BUEk6IFBPU1QgY2FzaGJhY2sgYXBwbHkgb24gcGF5bWVudAoKICAgIEFQSS0+PkRCOiBCRUdJTgogICAgTm90ZSBvdmVyIEFQSTogQXRvbWljIHJlZGVtcHRpb24gd2l0aCBGSUZPIHBhcnRpYWwgZHJhaW4gYWNyb3NzIGxvdHMKCiAgICBBUEktPj5EQjogU0VMRUNUIEZPUiBVUERBVEUgYWN0aXZlIG1hdHVyZWQgbG90cyBvcmRlcmVkIGJ5IGF2YWlsYWJsZSBhdCB0aGVuIGVhcm5lZCBhdCB0aGVuIGlkCiAgICBEQi0tPj5BUEk6IExvY2tlZCBhY3RpdmUgbG90cwoKICAgIEFQSS0+PkFQSTogQXNzZXJ0IHN1bSBvZiByZW1haW5pbmcgaXMgYXQgbGVhc3QgWSBvciByb2xsYmFjayBhcyBpbnN1ZmZpY2llbnQgYmFsYW5jZQoKICAgIEFQSS0+PkRCOiBJTlNFUlQgY2FzaGJhY2sgcmVkZW1wdGlvbiByb3cgd2l0aCBzdGF0dXMgcGVuZGluZyBhbmQgYW1vdW50IFkKICAgIERCLS0+PkFQSTogUmVkZW1wdGlvbiBpZAoKICAgIGxvb3AgRm9yIGVhY2ggbG90IHVudGlsIFkgaXMgZHJhaW5lZAogICAgICAgIEFQSS0+PkFQSTogVGFrZSBpcyB0aGUgbGVzc2VyIG9mIGxvdCByZW1haW5pbmcgYW5kIFkgbGVmdAogICAgICAgIEFQSS0+PkRCOiBJTlNFUlQgcmVkZW1wdGlvbiBjb25zdW1wdGlvbiByb3cgd2l0aCBhbW91bnQgdGFrZW4KICAgICAgICBBUEktPj5EQjogVVBEQVRFIGxvdCBjb25zdW1lZCBhbW91bnQgYW5kIGZsaXAgc3RhdHVzIHRvIGZ1bGx5IGNvbnN1bWVkIGlmIGRyYWluZWQKICAgICAgICBBUEktPj5BUEk6IFN1YnRyYWN0IHRha2VuIGZyb20gWSBsZWZ0CiAgICBlbmQKCiAgICBBUEktPj5EQjogVVBEQVRFIGJhbGFuY2VzIC0gc3VidHJhY3QgWSBmcm9tIGF2YWlsYWJsZSBhbmQgYWRkIFkgdG8gbGlmZXRpbWUgcmVkZWVtZWQKICAgIEFQSS0+PkxFREdFUjogSU5TRVJUIHJlZGVlbSBldmVudCB3aXRoIGJhbGFuY2VzIGFuZCBpZHMKICAgIEFQSS0+PkRCOiBDT01NSVQKCiAgICBBUEktPj5QQVk6IEFwcGx5IGRpc2NvdW50IHRvIHBheW1lbnQKICAgIFBBWS0+PlBBWTogUGF5YWJsZSB0b3RhbCBpcyBvcmRlciB0b3RhbCBtaW51cyBZCiAgICBBUEktLT4+QVBQOiBSZXR1cm4gcmVkZW1wdGlvbiBpZCBhbmQgcGF5YWJsZSB0b3RhbAogICAgQVBQLS0+PkM6IFNob3cgbmV3IHRvdGFsCgogICAgQVBQLT4+R1c6IENoYXJnZSBwYXlhYmxlIHRvdGFsCgogICAgYWx0IEdhdGV3YXkgc3VjY2VzcwogICAgICAgIEdXLS0+PkFQUDogUGFpZAogICAgICAgIEFQUC0+PkFQSTogUE9TVCBjYXNoYmFjayByZWRlbXB0aW9uIGNvbmZpcm0KICAgICAgICBBUEktPj5EQjogVVBEQVRFIHJlZGVtcHRpb24gc3RhdHVzIHRvIGNvbXBsZXRlZAogICAgICAgIE5vdGUgb3ZlciBBUEk6IExvdHMgYWxyZWFkeSBkZWJpdGVkIGF0IGFwcGx5IHRpbWUgc28gbm90aGluZyBtb3JlIHRvIGRvIGhlcmUKICAgIGVsc2UgR2F0ZXdheSBkZWNsaW5lIG9yIGFiYW5kb25lZAogICAgICAgIEdXLS0+PkFQUDogRmFpbGVkCiAgICAgICAgQVBQLT4+QVBJOiBQT1NUIGNhc2hiYWNrIHJlZGVtcHRpb24gdm9pZAogICAgICAgIEFQSS0+PkRCOiBCRUdJTgogICAgICAgIEFQSS0+PkRCOiBVUERBVEUgcmVkZW1wdGlvbiBzdGF0dXMgdG8gdm9pZGVkIHdpdGggcmVhc29uCiAgICAgICAgbG9vcCBGb3IgZWFjaCBjb25zdW1wdGlvbiByb3cgb2YgdGhpcyByZWRlbXB0aW9uCiAgICAgICAgICAgIEFQSS0+PkRCOiBVUERBVEUgbG90IC0gc3VidHJhY3QgYW1vdW50IGFuZCByZXN0b3JlIHN0YXR1cyB0byBhY3RpdmUgaWYgbmVlZGVkCiAgICAgICAgZW5kCiAgICAgICAgQVBJLT4+REI6IFVQREFURSBiYWxhbmNlcyAtIGFkZCBZIGJhY2sgdG8gYXZhaWxhYmxlIGFuZCBzdWJ0cmFjdCBZIGZyb20gbGlmZXRpbWUgcmVkZWVtZWQKICAgICAgICBBUEktPj5MRURHRVI6IElOU0VSVCB2b2lkIHJlZGVtcHRpb24gZXZlbnQKICAgICAgICBBUEktPj5EQjogQ09NTUlUCiAgICBlbmQK"),
+    refund: atob("c2VxdWVuY2VEaWFncmFtCiAgICBhdXRvbnVtYmVyCiAgICBhY3RvciBNIGFzIE1lcmNoYW50IG9yIEFkbWluCiAgICBwYXJ0aWNpcGFudCBBUEkgYXMgUmVmdW5kIFNlcnZpY2UKICAgIHBhcnRpY2lwYW50IERCIGFzIE15U1FMCiAgICBwYXJ0aWNpcGFudCBMRURHRVIgYXMgQ2FzaGJhY2sgTGVkZ2VyCiAgICBwYXJ0aWNpcGFudCBHVyBhcyBQYXltZW50IEdhdGV3YXkKICAgIHBhcnRpY2lwYW50IFNFVFRMRSBhcyBTZXR0bGVtZW50IEpvYgoKICAgIE0tPj5BUEk6IEluaXRpYXRlIHJlZnVuZCBmb3Igb3JkZXIgTwogICAgQVBJLT4+REI6IFNFTEVDVCBvcmRlciB3aXRoIHBheW1lbnQgYW5kIGNhc2hiYWNrIGNvbnRleHQKICAgIERCLS0+PkFQSTogT3JkZXIsIHBheW1lbnQsIGxvdHMgZWFybmVkIGZyb20gdGhpcyBwYXltZW50LCByZWRlbXB0aW9ucyBhcHBsaWVkIHRvIHRoaXMgcGF5bWVudAoKICAgIEFQSS0+PkFQSTogQ29tcHV0ZSBwYXlhYmxlX3RvdGFsIGFzIG9yZGVyIHRvdGFsIG1pbnVzIGNhc2hiYWNrIHJlZGVlbWVkIG9uIHRoaXMgb3JkZXIKICAgIEFQSS0+PkFQSTogT25seSB0aGUgZ2F0ZXdheSBwb3J0aW9uIGlzIHJlZnVuZGFibGUKCiAgICBBUEktPj5HVzogUmVmdW5kIHBheWFibGVfdG90YWwKICAgIEdXLS0+PkFQSTogUmVmdW5kIGFjY2VwdGVkCgogICAgQVBJLT4+REI6IEJFR0lOCiAgICBBUEktPj5EQjogVVBEQVRFIHBheW1lbnQgLSBzZXQgaXNfcmVmdW5kIHRvIHRydWUgYW5kIHN0b3JlIHJlZnVuZCBtZXRhZGF0YQoKICAgIE5vdGUgb3ZlciBBUEk6IFJldmVyc2Ugb25seSB0aGUgVmFzdCBmZWVzIG9uIGxvdHMgZWFybmVkIGZyb20gdGhpcyBwYXltZW50Ljxici8+TG90cyBhbmQgcmVkZW1wdGlvbnMgYXJlIG5vdCBtb2RpZmllZC4KCiAgICBsb29wIEZvciBlYWNoIGNhc2hiYWNrIGxvdCB0aWVkIHRvIHRoZSByZWZ1bmRlZCBwYXltZW50CiAgICAgICAgQVBJLT4+TEVER0VSOiBJTlNFUlQgcmV2ZXJzZV92YXN0X2ZlZSBldmVudCB3aXRoIHZhc3RfZmVlX2Ftb3VudCwgbG90X2lkLCBwYXltZW50X2lkCiAgICBlbmQKCiAgICBBUEktPj5EQjogQ09NTUlUCgogICAgTm90ZSBvdmVyIEFQSTogVXNlZCBjYXNoYmFjayBzdGF5cyBjb25zdW1lZCBhbmQgaXMgbm9uLXJlZnVuZGFibGUuPGJyLz5FYXJuZWQgY2FzaGJhY2sgc3RheXMgaW4gdGhlIGN1c3RvbWVyIHdhbGxldC48YnIvPkN1c3RvbWVyIGJhbGFuY2UgaXMgdW5jaGFuZ2VkIGJ5IHRoZSByZWZ1bmQuCgogICAgQVBJLS0+Pk06IFJlZnVuZCBzdWNjZXNzZnVsIHdpdGggc3VtbWFyeSBvZiBmZWVzIHJldmVyc2VkCgogICAgTm90ZSBvdmVyIFNFVFRMRTogTmV4dCBzZXR0bGVtZW50IGN5Y2xlIHBpY2tzIHVwIHJldmVyc2VfdmFzdF9mZWUgZXZlbnRzPGJyLz5hbmQgcG9zdHMgbWVyY2hhbnQgY3JlZGl0cyB0byBmaW5hbmNpYWxfdHJhbnNhY3Rpb25zLgoKICAgIFNFVFRMRS0+PkxFREdFUjogUmVhZCByZXZlcnNlX3Zhc3RfZmVlIGV2ZW50cyBzaW5jZSBsYXN0IHBheW91dAogICAgU0VUVExFLT4+REI6IElOU0VSVCBjcmVkaXRzIHRvIGZpbmFuY2lhbF90cmFuc2FjdGlvbnMgZm9yIGFmZmVjdGVkIG1lcmNoYW50cwo="),
+  };
+
+  // UTF-8 safe base64 decoder. atob() returns a binary string (latin-1);
+  // multi-byte UTF-8 sequences need to be re-decoded properly.
+  function decodeUtf8Base64(s) {
+    // s here is the result of atob(...) in the sources literal above —
+    // i.e. a "binary string" of bytes packed into char codes 0-255.
+    return new TextDecoder('utf-8').decode(
+      Uint8Array.from(s, c => c.charCodeAt(0))
+    );
+  }
+
+  // Decode each source through the UTF-8 path
+  const decoded = {};
+  for (const [key, raw] of Object.entries(sources)) {
+    decoded[key] = decodeUtf8Base64(raw);
+  }
+
+  // Inject sources into the visible <pre> (for mermaid) and the source-toggle <pre>.
+  for (const [key, src] of Object.entries(decoded)) {
+    document.getElementById('d-' + key).textContent = src;
+    document.getElementById('src-' + key).textContent = src;
+  }
+
+  // mermaid.live deep-link encoder
+  // mermaid.live accepts: https://mermaid.live/edit#base64:<base64-of-{code:"..."}>
+  function toMermaidLiveUrl(src) {
+    const payload = JSON.stringify({ code: src, mermaid: { theme: "default" } });
+    const b64 = btoa(unescape(encodeURIComponent(payload)));
+    return "https://mermaid.live/edit#base64:" + b64;
+  }
+  document.querySelectorAll('a.open-live').forEach(a => {
+    const id = a.dataset.target;
+    a.href = toMermaidLiveUrl(document.getElementById(id).textContent);
+  });
+
+  // Copy-to-clipboard
+  document.querySelectorAll('button.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const text = document.getElementById(btn.dataset.target).textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        const original = btn.textContent;
+        btn.textContent = 'Copied ✓';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1500);
+      } catch (e) {
+        alert('Copy failed — open the source panel and copy manually.');
+      }
+    });
+  });
+
+  // Init Mermaid manually (startOnLoad would run before we injected the text)
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'default',
+    securityLevel: 'loose',
+    sequence: { useMaxWidth: false, mirrorActors: false, boxMargin: 10 },
+    er: { useMaxWidth: false }
+  });
+  mermaid.run({ querySelector: 'pre.mermaid' });
+</script>
+</body>
+</html>
