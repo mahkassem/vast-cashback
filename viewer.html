@@ -121,7 +121,7 @@
   </article>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
 <script>
   const params = new URLSearchParams(location.search);
   const file = params.get('file') || 'cashback-db-design.md';
@@ -139,9 +139,9 @@
   // Custom renderer to add IDs to headings
   const renderer = new marked.Renderer();
   const slugCounts = {};
-  renderer.heading = function({ tokens, depth }) {
-    const text = this.parser.parseInline(tokens);
-    const raw = tokens.map(t => t.raw || t.text || '').join('');
+  const origHeading = renderer.heading.bind(renderer);
+  renderer.heading = function(text, level) {
+    const raw = text.replace(/<[^>]*>/g, '');
     let slug = slugify(raw);
     if (slugCounts[slug] !== undefined) {
       slugCounts[slug]++;
@@ -149,7 +149,7 @@
     } else {
       slugCounts[slug] = 0;
     }
-    return `<h${depth} id="${slug}">${text}</h${depth}>`;
+    return `<h${level} id="${slug}">${text}</h${level}>`;
   };
 
   marked.setOptions({ renderer, gfm: true, breaks: false });
