@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vast Cashback — Document Viewer</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.1/github-markdown-dark.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
 <style>
   :root {
     --bg: #0f1115;
@@ -82,7 +83,29 @@
   .markdown-body table { display: table; width: 100%; }
   .markdown-body th, .markdown-body td { border-color: var(--border); }
   .markdown-body code { background: #1a1d24; }
-  .markdown-body pre { background: #0d0f13 !important; }
+  .markdown-body pre { background: #0d0f13 !important; position: relative; }
+  .markdown-body pre code { background: transparent; padding: 0; font-size: 13px; line-height: 1.5; }
+  .code-block-wrapper {
+    position: relative; margin: 16px 0;
+  }
+  .code-block-wrapper pre {
+    border: 1px solid var(--border); border-radius: 8px; padding: 16px; overflow-x: auto;
+  }
+  .code-lang {
+    position: absolute; top: 0; left: 12px;
+    background: #2a2f3a; color: var(--muted); font-size: 11px;
+    padding: 1px 8px; border-radius: 0 0 4px 4px; z-index: 1;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+  .copy-code {
+    position: absolute; top: 8px; right: 8px;
+    background: var(--panel-soft, #1f232c); color: var(--muted); border: 1px solid var(--border);
+    padding: 4px 10px; border-radius: 5px; cursor: pointer; font-size: 11px;
+    opacity: 0; transition: opacity 0.15s; z-index: 1;
+  }
+  .code-block-wrapper:hover .copy-code { opacity: 1; }
+  .copy-code:hover { color: var(--accent); border-color: var(--accent); }
+  .copy-code.copied { color: #3ec78b; border-color: #3ec78b; }
   .markdown-body blockquote { border-left-color: var(--accent); color: var(--muted); }
   .markdown-body a { color: var(--accent); }
   .markdown-body hr { border-color: var(--border); }
@@ -122,7 +145,23 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/sql.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/bash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/json.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/javascript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/typescript.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/languages/php.min.js"></script>
 <script>
+  function copyCode(btn) {
+    const code = btn.parentElement.querySelector('code').textContent;
+    navigator.clipboard.writeText(code).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1500);
+    });
+  }
+
   const params = new URLSearchParams(location.search);
   const file = params.get('file') || 'cashback-db-design.md';
 
@@ -150,6 +189,19 @@
       slugCounts[slug] = 0;
     }
     return `<h${level} id="${slug}">${text}</h${level}>`;
+  };
+
+  // Syntax-highlighted code blocks
+  renderer.code = function(code, lang) {
+    let highlighted;
+    const language = lang && hljs.getLanguage(lang) ? lang : null;
+    if (language) {
+      highlighted = hljs.highlight(code, { language }).value;
+    } else {
+      highlighted = hljs.highlightAuto(code).value;
+    }
+    const langLabel = lang ? `<span class="code-lang">${lang}</span>` : '';
+    return `<div class="code-block-wrapper">${langLabel}<button class="copy-code" onclick="copyCode(this)">Copy</button><pre><code class="hljs${language ? ' language-' + language : ''}">${highlighted}</code></pre></div>`;
   };
 
   marked.setOptions({ renderer, gfm: true, breaks: false });
